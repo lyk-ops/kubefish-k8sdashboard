@@ -76,3 +76,14 @@ func (na *NamespaceApi) GetNamespaceName(c *gin.Context) {
 	}
 	response.OkWithDetailed(list, "获取成功", c)
 }
+
+func (na *NamespaceApi) UpdateNamespace(c *gin.Context) {
+	var ns request.UpdateNameSpace
+	_ = c.ShouldBindJSON(&ns)
+	if err := namespaceService.UpdateNamespace(ns.NameSpaceName, ns.Annotations, ns.Labels); err != nil {
+		global.KF_LOG.Error("更新失败", zap.Error(err))
+		response.FailWithMessage("更新失败", c)
+	} else {
+		response.OkWithMessage("更新成功", c)
+	}
+}

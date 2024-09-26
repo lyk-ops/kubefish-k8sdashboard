@@ -2,6 +2,7 @@ package cluster
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"github.com/pddzl/kubefish/server/global"
 	"github.com/pddzl/kubefish/server/model/common/request"
@@ -119,4 +120,36 @@ func (nss *NamespaceService) GetNamespaceName() ([]string, error) {
 		nameList = append(nameList, ns.Name)
 	}
 	return nameList, nil
+}
+
+// UpdateNamespace 更新namespace
+func (nss *NamespaceService) UpdateNamespace(NameSpaceName string, Annotations, Labels string) error {
+	//_, err := global.KF_K8S_Client.CoreV1().Namespaces().Update(context.TODO(), &namespace, metaV1.UpdateOptions{})
+	namespace := &coreV1.Namespace{
+		ObjectMeta: metaV1.ObjectMeta{
+			Name: NameSpaceName,
+		},
+	}
+	if Annotations != "" {
+		if namespace.Annotations == nil {
+			namespace.Annotations = make(map[string]string)
+		}
+		namespace.Annotations["annotations"] = Annotations
+	}
+	if Labels != "" {
+		if namespace.Labels == nil {
+			namespace.Labels = make(map[string]string)
+		}
+		namespace.Labels["labels"] = Labels
+	}
+	_, err := json.Marshal(namespace)
+	if err != nil {
+		return err
+	}
+	_, err = global.KF_K8S_Client.CoreV1().Namespaces().Update(context.Background(), namespace, metaV1.UpdateOptions{})
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }

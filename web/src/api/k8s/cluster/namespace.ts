@@ -45,3 +45,12 @@ export function getNamespaceNameApi() {
     method: "get"
   })
 }
+
+//更新命名空间
+export function updateNamespaceApi(data: { name: string; labels: Object }) {
+  return request<ApiResponseData<null>>({
+    url: "/k8s/namespace/updateNamespace",
+    method: "post",
+    data
+  })
+}

@@ -15,3 +15,13 @@ type PageInfo struct {
 type GetByName struct {
 	Name string `json:"name" from:"name" validate:"required"`
 }
+
+type NameSpace struct {
+	Name string `json:"name" from:"name"`
+}
+type UpdateNameSpace struct {
+	NameSpaceName string `json:"name" binding:"required"`
+	//Status        string `json:"status" `
+	Annotations string `json:"annotations"`
+	Labels      string `json:"labels"`
+}
